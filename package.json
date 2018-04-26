@@ -1,0 +1,27 @@
+{
+  "name": "purescript-yuntan",
+  "version": "1.0.0",
+  "description": "[WIP!] PureScript bindings to the node-yuntan library",
+  "scripts": {
+    "publish": "bower install && pulp publish",
+    "build": "pulp -w build"
+  },
+  "devDependencies": {
+    "bower": "^1.8.4",
+    "pulp": "^12.0.1",
+    "purescript": "^0.11.7"
+  },
+  "author": {
+    "name": "Li Meng Jun",
+    "email": "lmjubuntu@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Lupino/purescript-yuntan/issues"
+  },
+  "homepage": "https://github.com/Lupino/purescript-yuntan/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lupino/purescript-yuntan.git"
+  }
+}
