@@ -1,4 +1,4 @@
-var services = require('node-yuntan');
+var services = require('yuntan-service');
 
 exports.initService = function(name) {
   return function(service) {

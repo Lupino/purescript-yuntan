@@ -2,6 +2,7 @@ module Yuntan.Trans
   ( ServiceName
   , ServiceType
   , Service
+  , serviceName
   , initService
   , ServiceT
   , YuntanT
