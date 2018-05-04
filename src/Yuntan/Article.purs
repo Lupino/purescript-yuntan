@@ -31,6 +31,10 @@ module Yuntan.Article
   , removeTimelineMeta
   , graphql
 
+  , configSet
+  , configGet
+  , configArticleExtra
+  , getArticleExtra
   ) where
 
 import Prelude (Unit, (<<<))
@@ -90,6 +94,8 @@ data ArticleReq =
   | GetTimelineMeta Timeline
   | RemoveTimelineMeta Timeline
   | GraphQL String
+  | ConfigSet String Json
+  | ConfigGet String
 
 instance dataSourceNameArticleReq :: DataSourceName ArticleReq where
   dataSourceName _ = "article"
@@ -127,6 +133,8 @@ doFetch (SaveTimelineMeta a b) = importFn2 "saveTimelineMeta" a b
 doFetch (GetTimelineMeta a) = importFn1 "getTimelineMeta" a
 doFetch (RemoveTimelineMeta a) = importFn1 "removeTimelineMeta" a
 doFetch (GraphQL a) = importFn1 "graphQL" a
+doFetch (ConfigSet k v) = importFn2 "configSet" k v
+doFetch (ConfigGet k) = importFn1 "configGet" k
 
 saveFile
   :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
@@ -257,3 +265,23 @@ graphql
   :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
   => String -> YuntanT m Json
 graphql = dataFetch <<< GraphQL
+
+configSet
+  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  => String -> Json -> YuntanT m Unit
+configSet k = dataFetch <<< ConfigSet k
+
+configGet
+  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  => String -> YuntanT m Json
+configGet = dataFetch <<< ConfigGet
+
+configArticleExtra
+  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  => Json -> YuntanT m Unit
+configArticleExtra = configSet "article-extra"
+
+getArticleExtra
+  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  => YuntanT m Json
+getArticleExtra = configGet "article-extra"

@@ -16,7 +16,7 @@ import Yuntan.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, 
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Class (class MonadEff)
 import Control.Monad.Aff.Class (class MonadAff)
-import Yuntan.Utils (importFn1, importFn2, importFn3)
+import Yuntan.Utils (importFn1, importFn2)
 import Control.Monad.Eff.Exception (Error)
 import Control.Monad.Error.Class (class MonadThrow)
 

@@ -32,6 +32,12 @@ module Yuntan.User
   , graphqlByUser
   , graphqlByBind
   , graphqlByService
+  , configSet
+  , configGet
+  , configUserExtra
+  , configBindExtra
+  , getUserExtra
+  , getBindExtra
   ) where
 
 import Prelude (Unit, (<<<))
@@ -84,6 +90,8 @@ data UserReq =
   | GraphQLByUser NameOrUid String
   | GraphQLByBind Name String
   | GraphQLByService String String
+  | ConfigSet String Json
+  | ConfigGet String
 
 instance dataSourceNameUserReq :: DataSourceName UserReq where
   dataSourceName _ = "user"
@@ -119,6 +127,8 @@ doFetch (GraphQL ql) = importFn1 "graphql" ql
 doFetch (GraphQLByUser n ql) = importFn2 "graphqlByUser" n ql
 doFetch (GraphQLByBind n ql) = importFn2 "graphqlByBind" n ql
 doFetch (GraphQLByService n ql) = importFn2 "graphqlByService" n ql
+doFetch (ConfigSet k v) = importFn2 "configSet" k v
+doFetch (ConfigGet k) = importFn1 "configGet" k
 
 getList
   :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
@@ -237,3 +247,33 @@ graphqlByService
   :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
   => String -> String -> YuntanT m Json
 graphqlByService s = dataFetch <<< GraphQLByService s
+
+configSet
+  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  => String -> Json -> YuntanT m Unit
+configSet k = dataFetch <<< ConfigSet k
+
+configGet
+  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  => String -> YuntanT m Json
+configGet = dataFetch <<< ConfigGet
+
+configUserExtra
+  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  => Json -> YuntanT m Unit
+configUserExtra = configSet "user-extra"
+
+getUserExtra
+  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  => YuntanT m Json
+getUserExtra = configGet "user-extra"
+
+configBindExtra
+  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  => Json -> YuntanT m Unit
+configBindExtra = configSet "bind-extra"
+
+getBindExtra
+  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  => YuntanT m Json
+getBindExtra = configGet "bind-extra"
