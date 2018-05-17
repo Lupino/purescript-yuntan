@@ -132,7 +132,7 @@ doFetch (GetTimelineList a b) = importFn2 "getTimelineList" a b
 doFetch (SaveTimelineMeta a b) = importFn2 "saveTimelineMeta" a b
 doFetch (GetTimelineMeta a) = importFn1 "getTimelineMeta" a
 doFetch (RemoveTimelineMeta a) = importFn1 "removeTimelineMeta" a
-doFetch (GraphQL a) = importFn1 "graphQL" a
+doFetch (GraphQL a) = importFn1 "graphql" a
 doFetch (ConfigSet k v) = importFn2 "configSet" k v
 doFetch (ConfigGet k) = importFn1 "configGet" k
 

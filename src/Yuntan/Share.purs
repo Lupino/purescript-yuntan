@@ -71,7 +71,7 @@ doFetch (Get a) = importFn1 "get" a
 doFetch (GetChildren a b) = importFn2 "getChildren" a b
 doFetch (GetHistory a b) = importFn2 "getHistory" a b
 doFetch (GetPatch a b) = importFn2 "getPatch" a b
-doFetch (GraphQL a) = importFn1 "graphQL" a
+doFetch (GraphQL a) = importFn1 "graphql" a
 
 create
   :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
