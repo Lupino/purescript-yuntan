@@ -19,8 +19,8 @@
   "dependencies": {
     "purescript-strings": "^4.0.0",
     "purescript-aff": "^5.0.0",
-    "purescript-aff-promise": "^1.0.0",
-    "purescript-argonaut-core": "^4.0.0"
+    "purescript-argonaut-core": "^4.0.0",
+    "purescript-aff-promise": "justinwoo/purescript-aff-promise#compiler/0.12"
   },
   "repository": {
     "type": "git",

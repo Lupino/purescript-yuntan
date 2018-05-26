@@ -18,13 +18,13 @@ import Prelude
 import Data.Foldable (find)
 import Data.Maybe (Maybe (..))
 import Data.Newtype (class Newtype)
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Exception (error, Error)
+import Effect (Effect)
+import Effect.Exception (error, Error)
 import Control.Monad.Reader.Trans (ReaderT, runReaderT)
 import Control.Monad.Trans.Class (class MonadTrans, lift)
 import Control.Monad.Reader.Class (class MonadAsk, ask)
-import Control.Monad.Eff.Class (class MonadEff, liftEff)
-import Control.Monad.Aff.Class (class MonadAff, liftAff)
+import Effect.Class (class MonadEffect, liftEffect)
+import Effect.Aff.Class (class MonadAff, liftAff)
 import Control.Monad.Error.Class (class MonadThrow, throwError, class MonadError, catchError)
 
 type ServiceName = String
@@ -32,7 +32,7 @@ type ServiceType = String
 
 foreign import data Service :: Type
 
-foreign import initService :: forall opts eff. ServiceName -> ServiceType -> opts -> Eff eff Service
+foreign import initService :: forall opts. ServiceName -> ServiceType -> opts -> Effect Service
 
 foreign import serviceName :: Service -> ServiceName
 
@@ -67,10 +67,10 @@ instance monadServiceT :: Monad m => Monad (ServiceT m)
 instance monadTransServiceT :: MonadTrans ServiceT where
   lift = ServiceT <<< lift
 
-instance monadEffServiceT :: MonadEff eff m => MonadEff eff (ServiceT m) where
-  liftEff = lift <<< liftEff
+instance monadEffectServiceT :: MonadEffect m => MonadEffect (ServiceT m) where
+  liftEffect = lift <<< liftEffect
 
-instance monadAffServiceT :: MonadAff eff m => MonadAff eff (ServiceT m) where
+instance monadAffServiceT :: MonadAff m => MonadAff (ServiceT m) where
   liftAff = lift <<< liftAff
 
 instance monadAskServiceT :: Monad m => MonadAsk Service (ServiceT m) where
@@ -110,10 +110,10 @@ instance monadYuntanT :: Monad m => Monad (YuntanT m)
 instance monadTransYuntanT :: MonadTrans YuntanT where
   lift = YuntanT <<< lift
 
-instance monadEffYuntanT :: MonadEff eff m => MonadEff eff (YuntanT m) where
-  liftEff = lift <<< liftEff
+instance monadEffectYuntanT :: MonadEffect m => MonadEffect (YuntanT m) where
+  liftEffect = lift <<< liftEffect
 
-instance monadAffYuntanT :: MonadAff eff m => MonadAff eff (YuntanT m) where
+instance monadAffYuntanT :: MonadAff m => MonadAff (YuntanT m) where
   liftAff = lift <<< liftAff
 
 instance monadAskYuntanT :: Monad m => MonadAsk (Array Service) (YuntanT m) where

@@ -22,11 +22,10 @@ module Yuntan.Cart
 import Prelude (Unit, (<<<))
 import Data.Argonaut.Core (Json)
 import Yuntan.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, initService, Service)
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Class (class MonadEff)
-import Control.Monad.Aff.Class (class MonadAff)
+import Effect (Effect)
+import Effect.Aff.Class (class MonadAff)
 import Yuntan.Utils (importFn1, importFn2, importFn3)
-import Control.Monad.Eff.Exception (Error)
+import Effect.Exception (Error)
 import Control.Monad.Error.Class (class MonadThrow)
 
 type OrderIdOrSn = String
@@ -37,7 +36,7 @@ type Q = { from :: Int, size :: Int }
 defQ :: Q
 defQ = { from: 0, size: 10 }
 
-initCart :: forall opts eff. opts -> Eff eff Service
+initCart :: forall opts. opts -> Effect Service
 initCart = initService "cart" "CartService"
 
 data CartReq =
@@ -59,11 +58,11 @@ data CartReq =
 instance dataSourceNameCartReq :: DataSourceName CartReq where
   dataSourceName _ = "cart"
 
-instance dataSourceCartReq :: (MonadAff eff m, MonadEff eff m) => DataSource m CartReq where
+instance dataSourceCartReq :: MonadAff m => DataSource m CartReq where
   fetch = doFetch
 
 doFetch
-  :: forall eff m a. MonadAff eff m => MonadEff eff m
+  :: forall m a. MonadAff m
   => CartReq -> ServiceT m a
 doFetch (AddProduct a b) = importFn2 "addProduct" a b
 doFetch (GetCart a) = importFn1 "getCart" a
@@ -81,71 +80,71 @@ doFetch (GetOrder a) = importFn1 "getOrder" a
 doFetch (RemoveOrder a) = importFn1 "removeOrder" a
 
 addProduct
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => UserName -> Json -> YuntanT m Unit
 addProduct a = dataFetch <<< AddProduct a
 
 getCart
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => UserName -> YuntanT m Json
 getCart = dataFetch <<< GetCart
 
 removeProduct
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => UserName -> ProductId -> YuntanT m Unit
 removeProduct a = dataFetch <<< RemoveProduct a
 
 createOrder
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Json -> YuntanT m Json
 createOrder = dataFetch <<< CreateOrder
 
 updateOrderStatus
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => OrderIdOrSn -> String -> YuntanT m Unit
 updateOrderStatus a = dataFetch <<< UpdateOrderStatus a
 
 updateOrderStatusByUserName
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => UserName -> OrderIdOrSn -> String -> YuntanT m Unit
 updateOrderStatusByUserName a b = dataFetch <<< UpdateOrderStatusByUserName a b
 
 updateOrderBody
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => OrderIdOrSn -> Json -> YuntanT m Unit
 updateOrderBody a = dataFetch <<< UpdateOrderBody a
 
 updateOrderAmount
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => OrderIdOrSn -> Int -> YuntanT m Unit
 updateOrderAmount a = dataFetch <<< UpdateOrderAmount a
 
 getOrderList
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Q -> YuntanT m Json
 getOrderList = dataFetch <<< GetOrderList
 
 getOrderListByStatus
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => String -> Q -> YuntanT m Json
 getOrderListByStatus a = dataFetch <<< GetOrderListByStatus a
 
 getOrderListByUserName
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => UserName -> Q -> YuntanT m Json
 getOrderListByUserName a = dataFetch <<< GetOrderListByUserName a
 
 getOrderListByUserNameAndStatus
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => UserName -> String -> Q -> YuntanT m Json
 getOrderListByUserNameAndStatus a b = dataFetch <<< GetOrderListByUserNameAndStatus a b
 
 getOrder
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => OrderIdOrSn -> YuntanT m Json
 getOrder = dataFetch <<< GetOrder
 
 removeOrder
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => OrderIdOrSn -> YuntanT m Unit
 removeOrder = dataFetch <<< RemoveOrder

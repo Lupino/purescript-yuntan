@@ -17,17 +17,16 @@ module Yuntan.Search
 import Prelude (Unit, (<<<))
 import Data.Argonaut.Core (Json)
 import Yuntan.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, initService, Service)
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Class (class MonadEff)
-import Control.Monad.Aff.Class (class MonadAff)
+import Effect (Effect)
+import Effect.Aff.Class (class MonadAff)
 import Yuntan.Utils (importFn0, importFn1, importFn2, importFn3)
-import Control.Monad.Eff.Exception (Error)
+import Effect.Exception (Error)
 import Control.Monad.Error.Class (class MonadThrow)
 
 type IndexName = String
 type DocID = String
 
-initSearch :: forall opts eff. opts -> Eff eff Service
+initSearch :: forall opts. opts -> Effect Service
 initSearch = initService "search" "SearchService"
 
 data SearchReq =
@@ -47,11 +46,11 @@ data SearchReq =
 instance dataSourceNameSearchReq :: DataSourceName SearchReq where
   dataSourceName _ = "search"
 
-instance dataSourceSearchReq :: (MonadAff eff m, MonadEff eff m) => DataSource m SearchReq where
+instance dataSourceSearchReq :: MonadAff m => DataSource m SearchReq where
   fetch = doFetch
 
 doFetch
-  :: forall eff m a. MonadAff eff m => MonadEff eff m
+  :: forall m a. MonadAff m
   => SearchReq -> ServiceT m a
 doFetch (CreateIndex a b) = importFn2 "createIndex" a b
 doFetch (GetIndex a) = importFn1 "getIndex" a
@@ -67,61 +66,61 @@ doFetch (Debug a b) = importFn2 "debug" a b
 doFetch (Alias a) = importFn1 "alias" a
 
 createIndex
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => IndexName -> Json -> YuntanT m Unit
 createIndex a = dataFetch <<< CreateIndex a
 
 getIndex
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => IndexName -> YuntanT m Json
 getIndex = dataFetch <<< GetIndex
 
 deleteIndex
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => IndexName -> YuntanT m Unit
 deleteIndex = dataFetch <<< DeleteIndex
 
 listIndexes
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => YuntanT m Json
 listIndexes = dataFetch ListIndexes
 
 docIndex
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => IndexName -> DocID -> Json -> YuntanT m Unit
 docIndex a b = dataFetch <<< DocIndex a b
 
 docCount
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => IndexName -> YuntanT m Int
 docCount = dataFetch <<< DocCount
 
 docGet
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => IndexName -> DocID -> YuntanT m Json
 docGet a = dataFetch <<< DocGet a
 
 docDelete
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => IndexName -> DocID -> YuntanT m Unit
 docDelete a = dataFetch <<< DocDelete a
 
 search
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => IndexName -> Json -> YuntanT m Json
 search a = dataFetch <<< Search a
 
 listFields
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => IndexName -> YuntanT m Json
 listFields = dataFetch <<< ListFields
 
 debug
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => IndexName -> DocID -> YuntanT m Json
 debug a = dataFetch <<< Debug a
 
 alias
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Json -> YuntanT m Unit
 alias = dataFetch <<< Alias

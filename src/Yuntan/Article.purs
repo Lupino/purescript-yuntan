@@ -40,11 +40,10 @@ module Yuntan.Article
 import Prelude (Unit, (<<<))
 import Data.Argonaut.Core (Json)
 import Yuntan.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, initService, Service)
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Class (class MonadEff)
-import Control.Monad.Aff.Class (class MonadAff)
+import Effect (Effect)
+import Effect.Aff.Class (class MonadAff)
 import Yuntan.Utils (importFn1, importFn2, importFn3)
-import Control.Monad.Eff.Exception (Error)
+import Effect.Exception (Error)
 import Control.Monad.Error.Class (class MonadThrow)
 
 type Q = { from :: Int, size :: Int }
@@ -64,7 +63,7 @@ type FromUrl = String
 defQ :: Q
 defQ = { from: 0, size: 10 }
 
-initArticle :: forall opts eff. opts -> Eff eff Service
+initArticle :: forall opts. opts -> Effect Service
 initArticle = initService "article" "ArticleService"
 
 data ArticleReq =
@@ -100,11 +99,11 @@ data ArticleReq =
 instance dataSourceNameArticleReq :: DataSourceName ArticleReq where
   dataSourceName _ = "article"
 
-instance dataSourceArticleReq :: (MonadAff eff m, MonadEff eff m) => DataSource m ArticleReq where
+instance dataSourceArticleReq :: MonadAff m => DataSource m ArticleReq where
   fetch = doFetch
 
 doFetch
-  :: forall eff m a. MonadAff eff m => MonadEff eff m
+  :: forall m a. MonadAff m
   => ArticleReq -> ServiceT m a
 
 doFetch (SaveFile a b c) = importFn3 "saveFile" a b c
@@ -137,151 +136,151 @@ doFetch (ConfigSet k v) = importFn2 "configSet" k v
 doFetch (ConfigGet k) = importFn1 "configGet" k
 
 saveFile
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => FileKey -> Bucket -> Json -> YuntanT m Json
 saveFile a b = dataFetch <<< SaveFile a b
 
 getFile
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => FileKey -> YuntanT m Json
 getFile = dataFetch <<< GetFile
 
 create
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Json -> YuntanT m Json
 create = dataFetch <<< Create
 
 update
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => AID -> Json -> YuntanT m Json
 update a = dataFetch <<< Update a
 
 updateCover
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => AID -> FID -> YuntanT m Unit
 updateCover a = dataFetch <<< UpdateCover a
 
 removeCover
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => AID -> YuntanT m Unit
 removeCover = dataFetch <<< RemoveCover
 
 updateExtra
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => AID -> Json -> YuntanT m Unit
 updateExtra a = dataFetch <<< UpdateExtra a
 
 removeExtra
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => AID -> Json -> YuntanT m Unit
 removeExtra a = dataFetch <<< RemoveExtra a
 
 clearExtra
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => AID -> YuntanT m Unit
 clearExtra = dataFetch <<< ClearExtra
 
 remove
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => AID -> YuntanT m Unit
 remove = dataFetch <<< Remove
 
 get
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => AID -> YuntanT m Json
 get = dataFetch <<< Get
 
 exists
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => FromUrl -> YuntanT m AID
 exists = dataFetch <<< Exists
 
 getList
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Q -> YuntanT m Json
 getList = dataFetch <<< GetList
 
 createTag
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Tag -> YuntanT m Json
 createTag = dataFetch <<< CreateTag
 
 getTag
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => TID -> YuntanT m Json
 getTag = dataFetch <<< GetTag
 
 addArticleTag
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => AID -> Tag -> YuntanT m Unit
 addArticleTag a = dataFetch <<< AddArticleTag a
 
 removeArticleTag
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => AID -> Tag -> YuntanT m Unit
 removeArticleTag a = dataFetch <<< RemoveArticleTag a
 
 updateTag
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => TID -> Tag -> YuntanT m Unit
 updateTag a = dataFetch <<< UpdateTag a
 
 getTagByName
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Tag -> YuntanT m Json
 getTagByName = dataFetch <<< GetTagByName
 
 createTimeline
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Timeline -> AID -> YuntanT m Unit
 createTimeline a = dataFetch <<< CreateTimeline a
 
 removeTimeline
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Timeline -> AID -> YuntanT m Unit
 removeTimeline a = dataFetch <<< RemoveTimeline a
 
 getTimelineList
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Timeline -> Q -> YuntanT m Json
 getTimelineList a = dataFetch <<< GetTimelineList a
 
 saveTimelineMeta
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Timeline -> Meta -> YuntanT m Unit
 saveTimelineMeta a = dataFetch <<< SaveTimelineMeta a
 
 getTimelineMeta
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Timeline -> YuntanT m Meta
 getTimelineMeta = dataFetch <<< GetTimelineMeta
 
 removeTimelineMeta
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Timeline -> YuntanT m Unit
 removeTimelineMeta = dataFetch <<< RemoveTimelineMeta
 
 graphql
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => String -> YuntanT m Json
 graphql = dataFetch <<< GraphQL
 
 configSet
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => String -> Json -> YuntanT m Unit
 configSet k = dataFetch <<< ConfigSet k
 
 configGet
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => String -> YuntanT m Json
 configGet = dataFetch <<< ConfigGet
 
 configArticleExtra
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Json -> YuntanT m Unit
 configArticleExtra = configSet "article-extra"
 
 getArticleExtra
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => YuntanT m Json
 getArticleExtra = configGet "article-extra"

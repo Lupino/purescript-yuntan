@@ -43,11 +43,10 @@ module Yuntan.User
 import Prelude (Unit, (<<<))
 import Data.Argonaut.Core (Json)
 import Yuntan.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, initService, Service)
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Class (class MonadEff)
-import Control.Monad.Aff.Class (class MonadAff)
+import Effect (Effect)
+import Effect.Aff.Class (class MonadAff)
 import Yuntan.Utils (importFn1, importFn2, importFn3)
-import Control.Monad.Eff.Exception (Error)
+import Effect.Exception (Error)
 import Control.Monad.Error.Class (class MonadThrow)
 
 type Name = String
@@ -62,7 +61,7 @@ defQ = { from: 0, size: 10 }
 
 type Bind = {service :: String, name :: String, extra :: Json}
 
-initUser :: forall opts eff. opts -> Eff eff Service
+initUser :: forall opts. opts -> Effect Service
 initUser = initService "user" "UserService"
 
 data UserReq =
@@ -96,11 +95,11 @@ data UserReq =
 instance dataSourceNameUserReq :: DataSourceName UserReq where
   dataSourceName _ = "user"
 
-instance dataSourceUserReq :: (MonadAff eff m, MonadEff eff m) => DataSource m UserReq where
+instance dataSourceUserReq :: MonadAff m => DataSource m UserReq where
   fetch = doFetch
 
 doFetch
-  :: forall eff m a. MonadAff eff m => MonadEff eff m
+  :: forall m a. MonadAff m
   => UserReq -> ServiceT m a
 
 doFetch (GetList q) = importFn1 "getList" q
@@ -131,149 +130,149 @@ doFetch (ConfigSet k v) = importFn2 "configSet" k v
 doFetch (ConfigGet k) = importFn1 "configGet" k
 
 getList
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Q -> YuntanT m Json
 getList = dataFetch <<< GetList
 
 create
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Name -> Password -> YuntanT m Json
 create n = dataFetch <<< Create n
 
 get
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameOrUid -> YuntanT m Json
 get = dataFetch <<< Get
 
 remove
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameOrUid -> YuntanT m Unit
 remove = dataFetch <<< Remove
 
 updateName
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameOrUid -> Name -> YuntanT m Unit
 updateName n = dataFetch <<< UpdateName n
 
 updatePassword
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameOrUid -> Password -> YuntanT m Unit
 updatePassword n = dataFetch <<< UpdatePassword n
 
 updateExtra
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameOrUid -> Json -> YuntanT m Unit
 updateExtra n = dataFetch <<< UpdateExtra n
 
 removeExtra
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameOrUid -> Json -> YuntanT m Unit
 removeExtra n = dataFetch <<< RemoveExtra n
 
 clearExtra
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameOrUid -> YuntanT m Unit
 clearExtra = dataFetch <<< ClearExtra
 
 verifyPassword
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameOrUid -> Password -> YuntanT m Unit
 verifyPassword n = dataFetch <<< VerifyPassword n
 createBind
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameOrUid -> Bind -> YuntanT m Json
 createBind n = dataFetch <<< CreateBind n
 getBind
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Name -> YuntanT m Json
 getBind = dataFetch <<< GetBind
 
 removeBind
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Name -> YuntanT m Unit
 removeBind = dataFetch <<< RemoveBind
 
 updateBindExtra
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameOrBid -> Json -> YuntanT m Unit
 updateBindExtra n = dataFetch <<< UpdateBindExtra n
 
 getBindListByUser
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameOrUid -> Q -> YuntanT m Json
 getBindListByUser n = dataFetch <<< GetBindListByUser n
 
 getBindListByService
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
    => String -> Q -> YuntanT m Json
 getBindListByService s = dataFetch <<< GetBindListByService s
 
 getBindListByUserAndService
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
    => NameOrUid -> String -> Q -> YuntanT m Json
 getBindListByUserAndService n s = dataFetch <<< GetBindListByUserAndService n s
 
 getListByGroup
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
    => String -> Q -> YuntanT m Json
 getListByGroup g = dataFetch <<< GetListByGroup g
 
 createGroup
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameOrUid -> String -> YuntanT m Unit
 createGroup n = dataFetch <<< CreateGroup n
 
 removeGroup
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameOrUid -> String -> YuntanT m Unit
 removeGroup n = dataFetch <<< RemoveGroup n
 
 graphql
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => String -> YuntanT m Json
 graphql = dataFetch <<< GraphQL
 
 graphqlByUser
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameOrUid -> String -> YuntanT m Json
 graphqlByUser n = dataFetch <<< GraphQLByUser n
 
 graphqlByBind
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Name -> String -> YuntanT m Json
 graphqlByBind n = dataFetch <<< GraphQLByBind n
 
 graphqlByService
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => String -> String -> YuntanT m Json
 graphqlByService s = dataFetch <<< GraphQLByService s
 
 configSet
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => String -> Json -> YuntanT m Unit
 configSet k = dataFetch <<< ConfigSet k
 
 configGet
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => String -> YuntanT m Json
 configGet = dataFetch <<< ConfigGet
 
 configUserExtra
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Json -> YuntanT m Unit
 configUserExtra = configSet "user-extra"
 
 getUserExtra
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => YuntanT m Json
 getUserExtra = configGet "user-extra"
 
 configBindExtra
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Json -> YuntanT m Unit
 configBindExtra = configSet "bind-extra"
 
 getBindExtra
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => YuntanT m Json
 getBindExtra = configGet "bind-extra"

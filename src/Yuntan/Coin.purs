@@ -24,11 +24,10 @@ module Yuntan.Coin
 import Prelude (Unit, (<<<))
 import Data.Argonaut.Core (Json)
 import Yuntan.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, initService, Service)
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Class (class MonadEff)
-import Control.Monad.Aff.Class (class MonadAff)
+import Effect (Effect)
+import Effect.Aff.Class (class MonadAff)
 import Yuntan.Utils (importFn1, importFn2, importFn3)
-import Control.Monad.Eff.Exception (Error)
+import Effect.Exception (Error)
 import Control.Monad.Error.Class (class MonadThrow)
 
 type Name = String
@@ -44,7 +43,7 @@ type HQ = {from :: Int, size :: Int, start_time :: Int, end_time :: Int}
 defHQ :: HQ
 defHQ = {from: 0, size: 0, start_time: 0, end_time: 0}
 
-initCoin :: forall opts eff. opts -> Eff eff Service
+initCoin :: forall opts. opts -> Effect Service
 initCoin = initService "coin" "CoinService"
 
 data CoinReq =
@@ -63,11 +62,11 @@ data CoinReq =
 instance dataSourceNameCoinReq :: DataSourceName CoinReq where
   dataSourceName _ = "coin"
 
-instance dataSourceCoinReq :: (MonadAff eff m, MonadEff eff m) => DataSource m CoinReq where
+instance dataSourceCoinReq :: MonadAff m => DataSource m CoinReq where
   fetch = doFetch
 
 doFetch
-  :: forall eff m a. MonadAff eff m => MonadEff eff m
+  :: forall m a. MonadAff m
   => CoinReq -> ServiceT m a
 
 doFetch (GetScore n) = importFn1 "getScore" n
@@ -83,56 +82,56 @@ doFetch (GraphQL ql) = importFn1 "graphql" ql
 doFetch (GraphQLByName n ql) = importFn2 "graphqlByName" n ql
 
 getScore
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Name -> YuntanT m Int
 getScore = dataFetch <<< GetScore
 
 getInfo
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Name -> YuntanT m Json
 getInfo = dataFetch <<< GetInfo
 
 putInfo
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Name -> Json -> YuntanT m Unit
 putInfo n = dataFetch <<< PutInfo n
 
 dropCoin
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Name -> YuntanT m Unit
 dropCoin = dataFetch <<< DropCoin
 
 getList
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Name -> LQ -> YuntanT m Json
 getList n = dataFetch <<< GetList n
 
 getListWithNameSpace
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Name -> NameSpace -> LQ -> YuntanT m Json
 getListWithNameSpace n ns = dataFetch <<< GetListWithNameSpace n ns
 
 getHistory
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => HQ -> YuntanT m Json
 getHistory = dataFetch <<< GetHistory
 
 getHistoryByNameSpace
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => NameSpace -> HQ -> YuntanT m Json
 getHistoryByNameSpace ns = dataFetch <<< GetHistoryByNameSpace ns
 
 save
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Json -> YuntanT m Json
 save = dataFetch <<< Save
 
 graphql
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => String -> YuntanT m Json
 graphql = dataFetch <<< GraphQL
 
 graphqlByName
-  :: forall eff m. MonadAff eff m => MonadEff eff m => MonadThrow Error m
+  :: forall m. MonadAff m => MonadThrow Error m
   => Name -> String -> YuntanT m Json
 graphqlByName n = dataFetch <<< GraphQLByName n
