@@ -17,12 +17,13 @@ module Yuntan.Share
 
 import Prelude (Unit, (<<<))
 import Data.Argonaut.Core (Json)
-import Yuntan.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, initService, Service)
+import Yuntan.Internal.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, Service)
 import Effect (Effect)
 import Effect.Aff.Class (class MonadAff)
-import Yuntan.Utils (importFn1, importFn2)
+import Yuntan.Internal.Utils (fromFn1, fromFn2)
 import Effect.Exception (Error)
 import Control.Monad.Error.Class (class MonadThrow)
+import Yuntan.Helper (initService)
 
 type Name = String
 type ShareName = String
@@ -60,17 +61,17 @@ instance dataSourceShareReq :: MonadAff m => DataSource m ShareReq where
 doFetch
   :: forall m a. MonadAff m
   => ShareReq -> ServiceT m a
-doFetch (Create a b) = importFn2 "create" a b
-doFetch (CreateHistory a b) = importFn2 "createHistory" a b
-doFetch (SaveConfig a b) = importFn2 "saveConfig" a b
-doFetch (GetConfig a) = importFn1 "getConfig" a
-doFetch (GetList a) = importFn1 "getList" a
-doFetch (Statistic a) = importFn1 "statistic" a
-doFetch (Get a) = importFn1 "get" a
-doFetch (GetChildren a b) = importFn2 "getChildren" a b
-doFetch (GetHistory a b) = importFn2 "getHistory" a b
-doFetch (GetPatch a b) = importFn2 "getPatch" a b
-doFetch (GraphQL a) = importFn1 "graphql" a
+doFetch (Create a b) = fromFn2 "create" a b
+doFetch (CreateHistory a b) = fromFn2 "createHistory" a b
+doFetch (SaveConfig a b) = fromFn2 "saveConfig" a b
+doFetch (GetConfig a) = fromFn1 "getConfig" a
+doFetch (GetList a) = fromFn1 "getList" a
+doFetch (Statistic a) = fromFn1 "statistic" a
+doFetch (Get a) = fromFn1 "get" a
+doFetch (GetChildren a b) = fromFn2 "getChildren" a b
+doFetch (GetHistory a b) = fromFn2 "getHistory" a b
+doFetch (GetPatch a b) = fromFn2 "getPatch" a b
+doFetch (GraphQL a) = fromFn1 "graphql" a
 
 create
   :: forall m. MonadAff m => MonadThrow Error m

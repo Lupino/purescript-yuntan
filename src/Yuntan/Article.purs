@@ -39,12 +39,13 @@ module Yuntan.Article
 
 import Prelude (Unit, (<<<))
 import Data.Argonaut.Core (Json)
-import Yuntan.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, initService, Service)
+import Yuntan.Internal.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, Service)
 import Effect (Effect)
 import Effect.Aff.Class (class MonadAff)
-import Yuntan.Utils (importFn1, importFn2, importFn3)
+import Yuntan.Internal.Utils (fromFn1, fromFn2, fromFn3)
 import Effect.Exception (Error)
 import Control.Monad.Error.Class (class MonadThrow)
+import Yuntan.Helper (initService)
 
 type Q = { from :: Int, size :: Int }
 
@@ -106,34 +107,34 @@ doFetch
   :: forall m a. MonadAff m
   => ArticleReq -> ServiceT m a
 
-doFetch (SaveFile a b c) = importFn3 "saveFile" a b c
-doFetch (GetFile a) = importFn1 "getFile" a
-doFetch (Create a) = importFn1 "create" a
-doFetch (Update a b) = importFn2 "update" a b
-doFetch (UpdateCover a b) = importFn2 "updateCover" a b
-doFetch (RemoveCover a) = importFn1 "removeCover" a
-doFetch (UpdateExtra a b) = importFn2 "updateExtra" a b
-doFetch (RemoveExtra a b) = importFn2 "removeExtra" a b
-doFetch (ClearExtra a) = importFn1 "clearExtra" a
-doFetch (Remove a) = importFn1 "remove" a
-doFetch (Get a) = importFn1 "get" a
-doFetch (Exists a) = importFn1 "exists" a
-doFetch (GetList a) = importFn1 "getList" a
-doFetch (CreateTag a) = importFn1 "createTag" a
-doFetch (GetTag a) = importFn1 "getTag" a
-doFetch (AddArticleTag a b) = importFn2 "addArticleTag" a b
-doFetch (RemoveArticleTag a b) = importFn2 "removeArticleTag" a b
-doFetch (UpdateTag a b) = importFn2 "updateTag" a b
-doFetch (GetTagByName a) = importFn1 "getTagByName" a
-doFetch (CreateTimeline a b) = importFn2 "createTimeline" a b
-doFetch (RemoveTimeline a b) = importFn2 "removeTimeline" a b
-doFetch (GetTimelineList a b) = importFn2 "getTimelineList" a b
-doFetch (SaveTimelineMeta a b) = importFn2 "saveTimelineMeta" a b
-doFetch (GetTimelineMeta a) = importFn1 "getTimelineMeta" a
-doFetch (RemoveTimelineMeta a) = importFn1 "removeTimelineMeta" a
-doFetch (GraphQL a) = importFn1 "graphql" a
-doFetch (ConfigSet k v) = importFn2 "configSet" k v
-doFetch (ConfigGet k) = importFn1 "configGet" k
+doFetch (SaveFile a b c) = fromFn3 "saveFile" a b c
+doFetch (GetFile a) = fromFn1 "getFile" a
+doFetch (Create a) = fromFn1 "create" a
+doFetch (Update a b) = fromFn2 "update" a b
+doFetch (UpdateCover a b) = fromFn2 "updateCover" a b
+doFetch (RemoveCover a) = fromFn1 "removeCover" a
+doFetch (UpdateExtra a b) = fromFn2 "updateExtra" a b
+doFetch (RemoveExtra a b) = fromFn2 "removeExtra" a b
+doFetch (ClearExtra a) = fromFn1 "clearExtra" a
+doFetch (Remove a) = fromFn1 "remove" a
+doFetch (Get a) = fromFn1 "get" a
+doFetch (Exists a) = fromFn1 "exists" a
+doFetch (GetList a) = fromFn1 "getList" a
+doFetch (CreateTag a) = fromFn1 "createTag" a
+doFetch (GetTag a) = fromFn1 "getTag" a
+doFetch (AddArticleTag a b) = fromFn2 "addArticleTag" a b
+doFetch (RemoveArticleTag a b) = fromFn2 "removeArticleTag" a b
+doFetch (UpdateTag a b) = fromFn2 "updateTag" a b
+doFetch (GetTagByName a) = fromFn1 "getTagByName" a
+doFetch (CreateTimeline a b) = fromFn2 "createTimeline" a b
+doFetch (RemoveTimeline a b) = fromFn2 "removeTimeline" a b
+doFetch (GetTimelineList a b) = fromFn2 "getTimelineList" a b
+doFetch (SaveTimelineMeta a b) = fromFn2 "saveTimelineMeta" a b
+doFetch (GetTimelineMeta a) = fromFn1 "getTimelineMeta" a
+doFetch (RemoveTimelineMeta a) = fromFn1 "removeTimelineMeta" a
+doFetch (GraphQL a) = fromFn1 "graphql" a
+doFetch (ConfigSet k v) = fromFn2 "configSet" k v
+doFetch (ConfigGet k) = fromFn1 "configGet" k
 
 saveFile
   :: forall m. MonadAff m => MonadThrow Error m

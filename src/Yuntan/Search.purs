@@ -16,12 +16,13 @@ module Yuntan.Search
 
 import Prelude (Unit, (<<<))
 import Data.Argonaut.Core (Json)
-import Yuntan.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, initService, Service)
+import Yuntan.Internal.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, Service)
 import Effect (Effect)
 import Effect.Aff.Class (class MonadAff)
-import Yuntan.Utils (importFn0, importFn1, importFn2, importFn3)
+import Yuntan.Internal.Utils (fromFn0, fromFn1, fromFn2, fromFn3)
 import Effect.Exception (Error)
 import Control.Monad.Error.Class (class MonadThrow)
+import Yuntan.Helper (initService)
 
 type IndexName = String
 type DocID = String
@@ -52,18 +53,18 @@ instance dataSourceSearchReq :: MonadAff m => DataSource m SearchReq where
 doFetch
   :: forall m a. MonadAff m
   => SearchReq -> ServiceT m a
-doFetch (CreateIndex a b) = importFn2 "createIndex" a b
-doFetch (GetIndex a) = importFn1 "getIndex" a
-doFetch (DeleteIndex a) = importFn1 "deleteIndex" a
-doFetch (ListIndexes) = importFn0 "listIndexes"
-doFetch (DocIndex a b c) = importFn3 "docIndex" a b c
-doFetch (DocCount a) = importFn1 "docCount" a
-doFetch (DocGet a b) = importFn2 "docGet" a b
-doFetch (DocDelete a b) = importFn2 "docDelete" a b
-doFetch (Search a b) = importFn2 "search" a b
-doFetch (ListFields a) = importFn1 "listFields" a
-doFetch (Debug a b) = importFn2 "debug" a b
-doFetch (Alias a) = importFn1 "alias" a
+doFetch (CreateIndex a b) = fromFn2 "createIndex" a b
+doFetch (GetIndex a) = fromFn1 "getIndex" a
+doFetch (DeleteIndex a) = fromFn1 "deleteIndex" a
+doFetch (ListIndexes) = fromFn0 "listIndexes"
+doFetch (DocIndex a b c) = fromFn3 "docIndex" a b c
+doFetch (DocCount a) = fromFn1 "docCount" a
+doFetch (DocGet a b) = fromFn2 "docGet" a b
+doFetch (DocDelete a b) = fromFn2 "docDelete" a b
+doFetch (Search a b) = fromFn2 "search" a b
+doFetch (ListFields a) = fromFn1 "listFields" a
+doFetch (Debug a b) = fromFn2 "debug" a b
+doFetch (Alias a) = fromFn1 "alias" a
 
 createIndex
   :: forall m. MonadAff m => MonadThrow Error m

@@ -23,12 +23,13 @@ module Yuntan.Coin
 
 import Prelude (Unit, (<<<))
 import Data.Argonaut.Core (Json)
-import Yuntan.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, initService, Service)
+import Yuntan.Internal.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, Service)
 import Effect (Effect)
 import Effect.Aff.Class (class MonadAff)
-import Yuntan.Utils (importFn1, importFn2, importFn3)
+import Yuntan.Internal.Utils (fromFn1, fromFn2, fromFn3)
 import Effect.Exception (Error)
 import Control.Monad.Error.Class (class MonadThrow)
+import Yuntan.Helper (initService)
 
 type Name = String
 type NameSpace = String
@@ -69,17 +70,17 @@ doFetch
   :: forall m a. MonadAff m
   => CoinReq -> ServiceT m a
 
-doFetch (GetScore n) = importFn1 "getScore" n
-doFetch (GetInfo n) = importFn1 "getInfo" n
-doFetch (PutInfo n v) = importFn2 "putInfo" n v
-doFetch (DropCoin n) = importFn1 "dropCoin" n
-doFetch (GetList n lq) = importFn2 "getList" n lq
-doFetch (GetListWithNameSpace n ns lq) = importFn3 "getListWithNameSpace" n ns lq
-doFetch (GetHistory hq) = importFn1 "getHistory" hq
-doFetch (GetHistoryByNameSpace ns hq) = importFn2 "getHistoryByNameSpace" ns hq
-doFetch (Save v) = importFn1 "save" v
-doFetch (GraphQL ql) = importFn1 "graphql" ql
-doFetch (GraphQLByName n ql) = importFn2 "graphqlByName" n ql
+doFetch (GetScore n) = fromFn1 "getScore" n
+doFetch (GetInfo n) = fromFn1 "getInfo" n
+doFetch (PutInfo n v) = fromFn2 "putInfo" n v
+doFetch (DropCoin n) = fromFn1 "dropCoin" n
+doFetch (GetList n lq) = fromFn2 "getList" n lq
+doFetch (GetListWithNameSpace n ns lq) = fromFn3 "getListWithNameSpace" n ns lq
+doFetch (GetHistory hq) = fromFn1 "getHistory" hq
+doFetch (GetHistoryByNameSpace ns hq) = fromFn2 "getHistoryByNameSpace" ns hq
+doFetch (Save v) = fromFn1 "save" v
+doFetch (GraphQL ql) = fromFn1 "graphql" ql
+doFetch (GraphQLByName n ql) = fromFn2 "graphqlByName" n ql
 
 getScore
   :: forall m. MonadAff m => MonadThrow Error m

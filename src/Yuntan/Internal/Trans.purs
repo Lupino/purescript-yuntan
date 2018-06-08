@@ -1,9 +1,9 @@
-module Yuntan.Trans
+module Yuntan.Internal.Trans
   ( ServiceName
   , ServiceType
   , Service
   , serviceName
-  , initService
+  , setServiceName
   , ServiceT
   , YuntanT
   , runYuntanT
@@ -32,9 +32,8 @@ type ServiceType = String
 
 foreign import data Service :: Type
 
-foreign import initService :: forall opts. ServiceName -> ServiceType -> opts -> Effect Service
-
 foreign import serviceName :: Service -> ServiceName
+foreign import setServiceName :: ServiceName -> Service -> Service
 
 lookupService :: ServiceName -> Array Service -> Maybe Service
 lookupService n = find isMatch

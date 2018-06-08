@@ -42,12 +42,13 @@ module Yuntan.User
 
 import Prelude (Unit, (<<<))
 import Data.Argonaut.Core (Json)
-import Yuntan.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, initService, Service)
+import Yuntan.Internal.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, Service)
 import Effect (Effect)
 import Effect.Aff.Class (class MonadAff)
-import Yuntan.Utils (importFn1, importFn2, importFn3)
+import Yuntan.Internal.Utils (fromFn1, fromFn2, fromFn3)
 import Effect.Exception (Error)
 import Control.Monad.Error.Class (class MonadThrow)
+import Yuntan.Helper (initService)
 
 type Name = String
 type NameOrUid = String
@@ -102,32 +103,32 @@ doFetch
   :: forall m a. MonadAff m
   => UserReq -> ServiceT m a
 
-doFetch (GetList q) = importFn1 "getList" q
-doFetch (Create n p) = importFn1 "create" {username: n, passwd: p}
-doFetch (Get n) = importFn1 "get" n
-doFetch (Remove n) = importFn1 "remove" n
-doFetch (UpdateName n u) = importFn2 "updateName" n u
-doFetch (UpdatePassword n p) = importFn2 "updatePassword" n p
-doFetch (UpdateExtra n e) = importFn2 "updateExtra" n e
-doFetch (RemoveExtra n e) = importFn2 "removeExtra" n e
-doFetch (ClearExtra n) = importFn1 "clearExtra" n
-doFetch (VerifyPassword n p) = importFn2 "verifyPassword" n p
-doFetch (CreateBind n b) = importFn2 "createBind" n b
-doFetch (GetBind n) = importFn1 "getBind" n
-doFetch (RemoveBind n) = importFn1 "removeBind" n
-doFetch (UpdateBindExtra b e) = importFn2 "updateBindExtra" b e
-doFetch (GetBindListByUser n q) = importFn2 "getBindListByUser" n q
-doFetch (GetBindListByService n q) = importFn2 "getBindListByService" n q
-doFetch (GetBindListByUserAndService n s q) = importFn3 "getBindListByUserAndService" n s q
-doFetch (GetListByGroup g q) = importFn2 "getListByGroup" g q
-doFetch (CreateGroup n g) = importFn2 "createGroup" n g
-doFetch (RemoveGroup n g) = importFn2 "removeGroup" n g
-doFetch (GraphQL ql) = importFn1 "graphql" ql
-doFetch (GraphQLByUser n ql) = importFn2 "graphqlByUser" n ql
-doFetch (GraphQLByBind n ql) = importFn2 "graphqlByBind" n ql
-doFetch (GraphQLByService n ql) = importFn2 "graphqlByService" n ql
-doFetch (ConfigSet k v) = importFn2 "configSet" k v
-doFetch (ConfigGet k) = importFn1 "configGet" k
+doFetch (GetList q) = fromFn1 "getList" q
+doFetch (Create n p) = fromFn1 "create" {username: n, passwd: p}
+doFetch (Get n) = fromFn1 "get" n
+doFetch (Remove n) = fromFn1 "remove" n
+doFetch (UpdateName n u) = fromFn2 "updateName" n u
+doFetch (UpdatePassword n p) = fromFn2 "updatePassword" n p
+doFetch (UpdateExtra n e) = fromFn2 "updateExtra" n e
+doFetch (RemoveExtra n e) = fromFn2 "removeExtra" n e
+doFetch (ClearExtra n) = fromFn1 "clearExtra" n
+doFetch (VerifyPassword n p) = fromFn2 "verifyPassword" n p
+doFetch (CreateBind n b) = fromFn2 "createBind" n b
+doFetch (GetBind n) = fromFn1 "getBind" n
+doFetch (RemoveBind n) = fromFn1 "removeBind" n
+doFetch (UpdateBindExtra b e) = fromFn2 "updateBindExtra" b e
+doFetch (GetBindListByUser n q) = fromFn2 "getBindListByUser" n q
+doFetch (GetBindListByService n q) = fromFn2 "getBindListByService" n q
+doFetch (GetBindListByUserAndService n s q) = fromFn3 "getBindListByUserAndService" n s q
+doFetch (GetListByGroup g q) = fromFn2 "getListByGroup" g q
+doFetch (CreateGroup n g) = fromFn2 "createGroup" n g
+doFetch (RemoveGroup n g) = fromFn2 "removeGroup" n g
+doFetch (GraphQL ql) = fromFn1 "graphql" ql
+doFetch (GraphQLByUser n ql) = fromFn2 "graphqlByUser" n ql
+doFetch (GraphQLByBind n ql) = fromFn2 "graphqlByBind" n ql
+doFetch (GraphQLByService n ql) = fromFn2 "graphqlByService" n ql
+doFetch (ConfigSet k v) = fromFn2 "configSet" k v
+doFetch (ConfigGet k) = fromFn1 "configGet" k
 
 getList
   :: forall m. MonadAff m => MonadThrow Error m

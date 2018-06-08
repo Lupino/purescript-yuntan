@@ -21,12 +21,13 @@ module Yuntan.Cart
 
 import Prelude (Unit, (<<<))
 import Data.Argonaut.Core (Json)
-import Yuntan.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, initService, Service)
+import Yuntan.Internal.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, Service)
 import Effect (Effect)
 import Effect.Aff.Class (class MonadAff)
-import Yuntan.Utils (importFn1, importFn2, importFn3)
+import Yuntan.Internal.Utils (fromFn1, fromFn2, fromFn3)
 import Effect.Exception (Error)
 import Control.Monad.Error.Class (class MonadThrow)
+import Yuntan.Helper (initService)
 
 type OrderIdOrSn = String
 type UserName = String
@@ -64,20 +65,20 @@ instance dataSourceCartReq :: MonadAff m => DataSource m CartReq where
 doFetch
   :: forall m a. MonadAff m
   => CartReq -> ServiceT m a
-doFetch (AddProduct a b) = importFn2 "addProduct" a b
-doFetch (GetCart a) = importFn1 "getCart" a
-doFetch (RemoveProduct a b) = importFn2 "removeProduct" a b
-doFetch (CreateOrder a) = importFn1 "createOrder" a
-doFetch (UpdateOrderStatus a b) = importFn2 "updateOrderStatus" a b
-doFetch (UpdateOrderStatusByUserName a b c) = importFn3 "updateOrderStatusByUserName" a b c
-doFetch (UpdateOrderBody a b) = importFn2 "updateOrderBody" a b
-doFetch (UpdateOrderAmount a b) = importFn2 "updateOrderAmount" a b
-doFetch (GetOrderList a) = importFn1 "getOrderList" a
-doFetch (GetOrderListByStatus a b) = importFn2 "getOrderListByStatus" a b
-doFetch (GetOrderListByUserName a b) = importFn2 "getOrderListByUserName" a b
-doFetch (GetOrderListByUserNameAndStatus a b c) = importFn3 "getOrderListByUserNameAndStatus" a b c
-doFetch (GetOrder a) = importFn1 "getOrder" a
-doFetch (RemoveOrder a) = importFn1 "removeOrder" a
+doFetch (AddProduct a b) = fromFn2 "addProduct" a b
+doFetch (GetCart a) = fromFn1 "getCart" a
+doFetch (RemoveProduct a b) = fromFn2 "removeProduct" a b
+doFetch (CreateOrder a) = fromFn1 "createOrder" a
+doFetch (UpdateOrderStatus a b) = fromFn2 "updateOrderStatus" a b
+doFetch (UpdateOrderStatusByUserName a b c) = fromFn3 "updateOrderStatusByUserName" a b c
+doFetch (UpdateOrderBody a b) = fromFn2 "updateOrderBody" a b
+doFetch (UpdateOrderAmount a b) = fromFn2 "updateOrderAmount" a b
+doFetch (GetOrderList a) = fromFn1 "getOrderList" a
+doFetch (GetOrderListByStatus a b) = fromFn2 "getOrderListByStatus" a b
+doFetch (GetOrderListByUserName a b) = fromFn2 "getOrderListByUserName" a b
+doFetch (GetOrderListByUserNameAndStatus a b c) = fromFn3 "getOrderListByUserNameAndStatus" a b c
+doFetch (GetOrder a) = fromFn1 "getOrder" a
+doFetch (RemoveOrder a) = fromFn1 "removeOrder" a
 
 addProduct
   :: forall m. MonadAff m => MonadThrow Error m

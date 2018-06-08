@@ -12,12 +12,13 @@ module Yuntan.Comment
 
 import Prelude (Unit, (<<<))
 import Data.Argonaut.Core (Json)
-import Yuntan.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, initService, Service)
+import Yuntan.Internal.Trans (class DataSourceName, class DataSource, ServiceT, YuntanT, dataFetch, Service)
 import Effect (Effect)
 import Effect.Aff.Class (class MonadAff)
-import Yuntan.Utils (importFn1, importFn2)
+import Yuntan.Internal.Utils (fromFn1, fromFn2)
 import Effect.Exception (Error)
 import Control.Monad.Error.Class (class MonadThrow)
+import Yuntan.Helper (initService)
 
 type For = String
 type CID = String
@@ -46,11 +47,11 @@ doFetch
   :: forall m a. MonadAff m
   => CommentReq -> ServiceT m a
 
-doFetch (Create a b) = importFn2 "create" a b
-doFetch (GetList a b) = importFn2 "getList" a b
-doFetch (Get a) = importFn1 "get" a
-doFetch (Remove a) = importFn1 "remove" a
-doFetch (RemoveList a) = importFn1 "removeList" a
+doFetch (Create a b) = fromFn2 "create" a b
+doFetch (GetList a b) = fromFn2 "getList" a b
+doFetch (Get a) = fromFn1 "get" a
+doFetch (Remove a) = fromFn1 "remove" a
+doFetch (RemoveList a) = fromFn1 "removeList" a
 
 create
   :: forall m. MonadAff m => MonadThrow Error m

@@ -11,7 +11,3 @@ exports.initService = function(name) {
     }
   }
 }
-
-exports.serviceName = function(service) {
-  return service.serviceName;
-}
