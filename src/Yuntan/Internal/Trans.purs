@@ -1,6 +1,5 @@
 module Yuntan.Internal.Trans
   ( ServiceName
-  , ServiceType
   , Service
   , serviceName
   , setServiceName
@@ -18,7 +17,6 @@ import Prelude
 import Data.Foldable (find)
 import Data.Maybe (Maybe (..))
 import Data.Newtype (class Newtype)
-import Effect (Effect)
 import Effect.Exception (error, Error)
 import Control.Monad.Reader.Trans (ReaderT, runReaderT)
 import Control.Monad.Trans.Class (class MonadTrans, lift)
@@ -28,7 +26,6 @@ import Effect.Aff.Class (class MonadAff, liftAff)
 import Control.Monad.Error.Class (class MonadThrow, throwError, class MonadError, catchError)
 
 type ServiceName = String
-type ServiceType = String
 
 foreign import data Service :: Type
 

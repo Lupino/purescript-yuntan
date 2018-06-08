@@ -1,8 +1,10 @@
 module Yuntan
-  ( module Yuntan.Internal.Trans
-  , module Yuntan.Internal.Utils
+  ( module Exports
   ) where
 
-import Yuntan.Internal.Trans (Service, runYuntanT, YuntanT)
-import Yuntan.Internal.Utils (fromFn0, fromFn1, fromFn2, fromFn3, fromAFn0,
-                              fromAFn1, fromAFn2, fromAFn3)
+import Yuntan.Internal.Utils (ServiceFunc, fromAFn0, fromAFn1, fromAFn2, fromAFn3,
+                              fromFn0, fromFn1, fromFn2, fromFn3) as Exports
+import Yuntan.Internal.Trans (class DataSource, class DataSourceName, Service,
+                              ServiceName, ServiceT, YuntanT, dataFetch,
+                              dataSourceName, fetch, runYuntanT, serviceName,
+                              setServiceName) as Exports
