@@ -17,6 +17,9 @@ module Yuntan.User
   , updateExtra
   , removeExtra
   , clearExtra
+  , updateSecureExtra
+  , removeSecureExtra
+  , clearSecureExtra
   , verifyPassword
   , createBind
   , getBind
@@ -75,6 +78,9 @@ data UserReq =
   | UpdateExtra NameOrUid Json
   | RemoveExtra NameOrUid Json
   | ClearExtra NameOrUid
+  | UpdateSecureExtra NameOrUid Json
+  | RemoveSecureExtra NameOrUid Json
+  | ClearSecureExtra NameOrUid
   | VerifyPassword NameOrUid Password
   | CreateBind NameOrUid Bind
   | GetBind Name
@@ -112,6 +118,9 @@ doFetch (UpdatePassword n p) = fromFn2 "updatePassword" n p
 doFetch (UpdateExtra n e) = fromFn2 "updateExtra" n e
 doFetch (RemoveExtra n e) = fromFn2 "removeExtra" n e
 doFetch (ClearExtra n) = fromFn1 "clearExtra" n
+doFetch (UpdateSecureExtra n e) = fromFn2 "updateSecureExtra" n e
+doFetch (RemoveSecureExtra n e) = fromFn2 "removeSecureExtra" n e
+doFetch (ClearSecureExtra n) = fromFn1 "clearSecureExtra" n
 doFetch (VerifyPassword n p) = fromFn2 "verifyPassword" n p
 doFetch (CreateBind n b) = fromFn2 "createBind" n b
 doFetch (GetBind n) = fromFn1 "getBind" n
@@ -174,6 +183,21 @@ clearExtra
   :: forall m. MonadAff m => MonadThrow Error m
   => NameOrUid -> YuntanT m Unit
 clearExtra = dataFetch <<< ClearExtra
+
+updateSecureExtra
+  :: forall m. MonadAff m => MonadThrow Error m
+  => NameOrUid -> Json -> YuntanT m Unit
+updateSecureExtra n = dataFetch <<< UpdateSecureExtra n
+
+removeSecureExtra
+  :: forall m. MonadAff m => MonadThrow Error m
+  => NameOrUid -> Json -> YuntanT m Unit
+removeSecureExtra n = dataFetch <<< RemoveSecureExtra n
+
+clearSecureExtra
+  :: forall m. MonadAff m => MonadThrow Error m
+  => NameOrUid -> YuntanT m Unit
+clearSecureExtra = dataFetch <<< ClearSecureExtra
 
 verifyPassword
   :: forall m. MonadAff m => MonadThrow Error m

@@ -8,8 +8,8 @@
   },
   "devDependencies": {
     "bower": "^1.8.4",
-    "pulp": "^12.2.0",
-    "purescript": "^0.11.7"
+    "pulp": "^12.3.0",
+    "purescript": "^0.12.0"
   },
   "author": {
     "name": "Li Meng Jun",
@@ -25,6 +25,6 @@
     "url": "https://github.com/Lupino/purescript-yuntan.git"
   },
   "dependencies": {
-    "yuntan-service": "^1.2.0"
+    "yuntan-service": "^1.2.1"
   }
 }
