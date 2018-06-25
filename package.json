@@ -27,6 +27,6 @@
     "url": "https://github.com/Lupino/purescript-yuntan.git"
   },
   "dependencies": {
-    "yuntan-service": "^1.2.1"
+    "yuntan-service": "^1.2.2"
   }
 }
