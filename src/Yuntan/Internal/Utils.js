@@ -2,19 +2,19 @@ exports._fromFn0 = function(func) {
   return function(service) {
     return function() {
       return service[func]();
-    }
-  }
-}
+    };
+  };
+};
 
 exports._fromFn1 = function(func) {
   return function(arg1) {
     return function(service) {
       return function() {
         return service[func](arg1);
-      }
-    }
-  }
-}
+      };
+    };
+  };
+};
 
 exports._fromFn2 = function(func) {
   return function(arg1) {
@@ -22,25 +22,25 @@ exports._fromFn2 = function(func) {
       return function(service) {
         return function() {
           return service[func](arg1, arg2);
-        }
-      }
-    }
-  }
-}
+        };
+      };
+    };
+  };
+};
 
 exports._fromFn3 = function(func) {
   return function(arg1) {
     return function(arg2) {
       return function(arg3) {
-        return function (service) {
+        return function(service) {
           return function() {
             return service[func](arg1, arg2, arg3);
-          }
-        }
-      }
-    }
-  }
-}
+          };
+        };
+      };
+    };
+  };
+};
 
 exports._fromAFn0 = function(func) {
   return function(client) {
@@ -54,12 +54,12 @@ exports._fromAFn0 = function(func) {
       });
 
       // Return a canceler, which is just another Aff effect.
-      return function (cancelError, cancelerError, cancelerSuccess) {
+      return function(cancelError, cancelerError, cancelerSuccess) {
         cancelerSuccess(); // invoke the success callback for the canceler
       };
-    }
-  }
-}
+    };
+  };
+};
 
 exports._fromAFn1 = function(func) {
   return function(arg1) {
@@ -74,13 +74,13 @@ exports._fromAFn1 = function(func) {
         });
 
         // Return a canceler, which is just another Aff effect.
-        return function (cancelError, cancelerError, cancelerSuccess) {
+        return function(cancelError, cancelerError, cancelerSuccess) {
           cancelerSuccess(); // invoke the success callback for the canceler
         };
-      }
-    }
-  }
-}
+      };
+    };
+  };
+};
 
 exports._fromAFn2 = function(func) {
   return function(arg1) {
@@ -96,15 +96,14 @@ exports._fromAFn2 = function(func) {
           });
 
           // Return a canceler, which is just another Aff effect.
-          return function (cancelError, cancelerError, cancelerSuccess) {
+          return function(cancelError, cancelerError, cancelerSuccess) {
             cancelerSuccess(); // invoke the success callback for the canceler
           };
-        }
-      }
-
-    }
-  }
-}
+        };
+      };
+    };
+  };
+};
 
 exports._fromAFn3 = function(func) {
   return function(arg1) {
@@ -121,12 +120,12 @@ exports._fromAFn3 = function(func) {
             });
 
             // Return a canceler, which is just another Aff effect.
-            return function (cancelError, cancelerError, cancelerSuccess) {
+            return function(cancelError, cancelerError, cancelerSuccess) {
               cancelerSuccess(); // invoke the success callback for the canceler
             };
-          }
-        }
-      }
-    }
-  }
-}
+          };
+        };
+      };
+    };
+  };
+};
