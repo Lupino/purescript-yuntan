@@ -35,12 +35,6 @@ module Yuntan.User
   , graphqlByUser
   , graphqlByBind
   , graphqlByService
-  , configSet
-  , configGet
-  , configUserExtra
-  , configBindExtra
-  , getUserExtra
-  , getBindExtra
   ) where
 
 import Prelude (Unit, (<<<))
@@ -96,8 +90,6 @@ data UserReq =
   | GraphQLByUser NameOrUid String
   | GraphQLByBind Name String
   | GraphQLByService String String
-  | ConfigSet String Json
-  | ConfigGet String
 
 instance dataSourceNameUserReq :: DataSourceName UserReq where
   dataSourceName _ = "user"
@@ -136,8 +128,6 @@ doFetch (GraphQL ql) = fromFn1 "graphql" ql
 doFetch (GraphQLByUser n ql) = fromFn2 "graphqlByUser" n ql
 doFetch (GraphQLByBind n ql) = fromFn2 "graphqlByBind" n ql
 doFetch (GraphQLByService n ql) = fromFn2 "graphqlByService" n ql
-doFetch (ConfigSet k v) = fromFn2 "configSet" k v
-doFetch (ConfigGet k) = fromFn1 "configGet" k
 
 getList
   :: forall m. MonadAff m => MonadThrow Error m
@@ -271,33 +261,3 @@ graphqlByService
   :: forall m. MonadAff m => MonadThrow Error m
   => String -> String -> YuntanT m Json
 graphqlByService s = dataFetch <<< GraphQLByService s
-
-configSet
-  :: forall m. MonadAff m => MonadThrow Error m
-  => String -> Json -> YuntanT m Unit
-configSet k = dataFetch <<< ConfigSet k
-
-configGet
-  :: forall m. MonadAff m => MonadThrow Error m
-  => String -> YuntanT m Json
-configGet = dataFetch <<< ConfigGet
-
-configUserExtra
-  :: forall m. MonadAff m => MonadThrow Error m
-  => Json -> YuntanT m Unit
-configUserExtra = configSet "user-extra"
-
-getUserExtra
-  :: forall m. MonadAff m => MonadThrow Error m
-  => YuntanT m Json
-getUserExtra = configGet "user-extra"
-
-configBindExtra
-  :: forall m. MonadAff m => MonadThrow Error m
-  => Json -> YuntanT m Unit
-configBindExtra = configSet "bind-extra"
-
-getBindExtra
-  :: forall m. MonadAff m => MonadThrow Error m
-  => YuntanT m Json
-getBindExtra = configGet "bind-extra"
