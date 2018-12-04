@@ -17,10 +17,10 @@
     "tests"
   ],
   "dependencies": {
-    "purescript-strings": "^4.0.0",
-    "purescript-aff": "^5.0.0",
-    "purescript-argonaut-core": "^4.0.0",
-    "purescript-aff-promise": "^2.0.0"
+    "purescript-strings": "^4.0.1",
+    "purescript-aff": "^5.0.2",
+    "purescript-argonaut-core": "^4.0.1",
+    "purescript-aff-promise": "^2.0.1"
   },
   "repository": {
     "type": "git",

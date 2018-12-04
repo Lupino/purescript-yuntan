@@ -8,10 +8,10 @@
   },
   "devDependencies": {
     "bower": "^1.8.4",
-    "eslint": "^5.0.0",
-    "eslint-config-google": "^0.9.1",
+    "eslint": "^5.9.0",
+    "eslint-config-google": "^0.11.0",
     "pulp": "^12.3.0",
-    "purescript": "^0.12.0"
+    "purescript": "^0.12.1"
   },
   "author": {
     "name": "Li Meng Jun",
@@ -27,6 +27,6 @@
     "url": "https://github.com/Lupino/purescript-yuntan.git"
   },
   "dependencies": {
-    "yuntan-service": "^1.2.2"
+    "yuntan-service": "^1.3.0"
   }
 }
